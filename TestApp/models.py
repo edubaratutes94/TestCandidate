@@ -21,6 +21,8 @@ class Candidates (models.Model):
     def __str__(self):
         return self.name
 
+
+
 class TechnologyCandidate (models.Model):
     created_at = models.DateTimeField('created at', auto_now_add=True)
     updated_at = models.DateTimeField('updated at', auto_now=True)
@@ -30,3 +32,6 @@ class TechnologyCandidate (models.Model):
 
     def __str__(self):
         return self.candidate.name
+
+    class Meta:
+        ordering = ['-year']

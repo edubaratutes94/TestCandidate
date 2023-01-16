@@ -2,6 +2,7 @@ from django.urls import reverse_lazy
 from django.shortcuts import redirect, get_object_or_404
 from django.views.generic import TemplateView, ListView, CreateView, UpdateView, DeleteView, DetailView
 from django.contrib import messages
+import sweetify
 from TestApp.models import *
 from TestApp.forms import *
 # Create your views here.
@@ -20,7 +21,7 @@ class CandidateCreateView(CreateView):
     success_url = reverse_lazy('home_list')
 
     def form_valid(self, form):
-        messages.add_message(self.request, messages.SUCCESS, 'Creado con exito!')
+        sweetify.success(self.request, 'Creado correctamente!', button='Ok', timer=5000)
         return super().form_valid(form)
 
 
@@ -31,7 +32,7 @@ class CandidateUpdateView(UpdateView):
     success_url = reverse_lazy('home_list')
 
     def form_valid(self, form):
-        messages.add_message(self.request, messages.SUCCESS, 'Actualizado con exito!')
+        sweetify.success(self.request, 'Actualizado con exito!', button='Ok', timer=5000)
         return super().form_valid(form)
 
 
@@ -42,7 +43,7 @@ class CandidateDeleteView(DeleteView):
     success_url = reverse_lazy('home_list')
 
     def post(self, request, *args, **kwargs):
-        messages.add_message(self.request, messages.SUCCESS, 'Eliminado con exito!')
+        sweetify.success(self.request, 'Eliminado con exito!', button='Ok', timer=5000)
         return super().post(request, *args, **kwargs)
 
 
@@ -53,16 +54,29 @@ class TechnologyCandidateListView(ListView):
     queryset = TechnologyCandidate.objects.order_by('-created_at')
 
 
-class TechnologyCandidateCreateView(CreateView):
-    model = TechnologyCandidate
-    template_name = 'testapp/tec_candidates/tec_candidate_form.html'
-    form_class = Form_TechnologyCandidate
-    success_url = reverse_lazy('techno_candidate_list')
-
-    def form_valid(self, form):
-        messages.add_message(self.request, messages.SUCCESS, 'Creado con exito!')
-        return super().form_valid(form)
-
+def technology_candidate_create(request):
+    tecno = TechnologyCandidate.objects.all()
+    if request.POST:
+        form = Form_TechnologyCandidate(request.POST)
+        if form.is_valid():
+            year = form.cleaned_data['year']
+            technology = form.cleaned_data['technology']
+            candidate = form.cleaned_data['candidate']
+            if tecno.filter(technology=technology, candidate=candidate).exists():
+                sweetify.error(request, 'Error, ya existe esta persona con esa tecnologia!', button='Ok', timer=5000)
+            else:
+                elemento = tecno.create(year=year, technology=technology,
+                                        candidate=candidate,
+                                        )
+                sweetify.success(request, 'Creado correctamente!', button='Ok', timer=5000)
+            return HttpResponseRedirect('/technology_candidate')
+        else:
+            sweetify.error(request, 'Error, en el formulario!', button='Ok', timer=5000)
+    else:
+        form = Form_TechnologyCandidate()
+    args = {}
+    args['form'] = form
+    return render(request, 'testapp/tec_candidates/tec_candidate_form.html', args)
 
 class TechnologyCandidateUpdateView(UpdateView):
     model = TechnologyCandidate
@@ -71,7 +85,7 @@ class TechnologyCandidateUpdateView(UpdateView):
     success_url = reverse_lazy('techno_candidate_list')
 
     def form_valid(self, form):
-        messages.add_message(self.request, messages.SUCCESS, 'Actualizado con exito!')
+        sweetify.success(self.request, 'Actualizado con exito!', button='Ok', timer=5000)
         return super().form_valid(form)
 
 
@@ -82,14 +96,11 @@ class TechnologyCandidateDeleteView(DeleteView):
     success_url = reverse_lazy('techno_candidate_list')
 
     def post(self, request, *args, **kwargs):
-        messages.add_message(self.request, messages.SUCCESS, 'Eliminado con exito!')
+        sweetify.success(request, 'Eliminado con exito!', button='Ok', timer=5000)
         return super().post(request, *args, **kwargs)
 
 
 def reporte(request, pk):
     tecnologia = get_object_or_404(Technology, pk=pk)
-    # years = TechnologyCandidate.objects.filter(technology_id=tecnologia.id).all()
-    # tipo_doc = models.Tipo_Documento.objects.filter(nivel=niveles.pk).all()
-    # nivels = models.NivelEducativo.objects.exclude(id=niveles.id).all()
     return render(request, 'testapp/reporte.html',
                   {'tecnologia': tecnologia})

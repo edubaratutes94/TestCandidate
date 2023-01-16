@@ -24,6 +24,7 @@
   <link href="{% static 'testapp/plugins/datatables-responsive/css/responsive.bootstrap4.min.css' %}" rel="stylesheet" type="text/css">
   <!-- Theme style -->
   <link href="{% static 'testapp/dist/css/adminlte.min.css' %}" rel="stylesheet" type="text/css">
+  <link rel="stylesheet" href="{% static 'testapp/sweetalert2/sweetalert2.min.css' %}">
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 </head>
@@ -70,25 +71,6 @@
                   <p>Tecnologias por candidatos</p>
                 </a>
               </li>
-            <li class="nav-item has-treeview">
-            <a href="#" class="nav-link">
-              <i class="nav-icon fas fa-folder"></i>
-              <p>
-                Reporte por Tecnologia
-                <i class="right fas fa-angle-left"></i>
-              </p>
-            </a>
-                {% for tec in technologys %}
-            <ul class="nav nav-treeview">
-              <li class="nav-item">
-                <a href="{% url 'reporte' tec.pk %}" class="nav-link">
-                  <i class="far fa-calendar nav-icon"></i>
-                  <p>{{ tec.name }}</p>
-                </a>
-              </li>
-            </ul>
-                {% endfor %}
-             </li>
 
         </ul>
       </nav>
@@ -134,16 +116,27 @@
 <script src="{% static 'testapp/plugins/jquery-mapael/maps/usa_states.min.js' %}"></script>
 <!-- ChartJS -->
 <script src="{% static 'testapp/plugins/chart.js/Chart.min.js' %}"></script>
+<!-- Select2 -->
+<script src="{% static 'testapp/plugins/select2/js/select2.full.min.js' %}"></script>
 
-<!-- PAGE SCRIPTS -->
+
 <script src="{% static 'testapp/dist/js/pages/dashboard2.js' %}"></script>
 <!-- DataTables -->
 <script src="{% static 'testapp/plugins/datatables/jquery.dataTables.min.js' %}"></script>
 <script src="{% static 'testapp/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js' %}"></script>
 <script src="{% static 'testapp/plugins/datatables-responsive/js/dataTables.responsive.min.js' %}"></script>
 <script src="{% static 'testapp/plugins/datatables-responsive/js/responsive.bootstrap4.min.js' %}"></script>
+<script src="{% static 'testapp/sweetalert2/sweetalert2.min.js' %}"></script>
+{% load sweetify %}
+{% sweetify %}
 <script>
   $(function () {
+       $('.select2').select2();
+
+    //Initialize Select2 Elements
+    $('.select2bs4').select2({
+      theme: 'bootstrap4'
+    });
     $('#dataTable').DataTable({
         language:{
             "lengthMenu": "Mostrar _MENU_ registros",
@@ -184,5 +177,6 @@
 </script>
 
 {% block js_custom %}  {% endblock %}
+
 </body>
 </html>

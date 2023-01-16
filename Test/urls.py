@@ -27,7 +27,7 @@ urlpatterns = [
 
     # Technology candidate years
     path('technology_candidate', TechnologyCandidateListView.as_view(), name="techno_candidate_list"),
-    path('technology_candidate/create', TechnologyCandidateCreateView.as_view(), name='techno_candidate_create'),
+    path('technology_candidate/create', technology_candidate_create, name='techno_candidate_create'),
     path('technology_candidate/update/<int:pk>', TechnologyCandidateUpdateView.as_view(), name='techno_candidate_update'),
     path('technology_candidate/delete/<int:pk>',TechnologyCandidateDeleteView.as_view(), name='techno_candidate_delete'),
     path('technology_candidate/delete/<int:pk>',TechnologyCandidateDeleteView.as_view(), name='techno_candidate_delete'),

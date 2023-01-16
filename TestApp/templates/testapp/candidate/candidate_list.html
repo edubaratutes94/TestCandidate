@@ -24,9 +24,19 @@
           <div class="col-12">
             <div class="card">
               <div class="card-header">
-                <h3 class="card-title">Listado de candidatos</h3>
+                <h3 class="card-title">Candidatos</h3>
                   <a href="{% url 'candidate_create' %}" type="button" class="btn btn-primary float-sm-right"><i class="fa fa-plus"></i> Nuevo</a>
               </div>
+              <div class="col-md-3">
+                    <div class="form-group">
+                      <select class="form-control select2" onchange="location = this.value;" style="width: 100%;">
+                        <option selected="selected">Seleccione tecnología</option>
+                          {% for tecno in technologys %}
+                        <option value="{% url 'reporte' tecno.pk %}">{{ tecno.name }}</option>
+                          {% endfor %}
+                      </select>
+                    </div>
+                    </div>
               <!-- /.card-header -->
               <div class="card-body">
                   <div class="portlet-body">
@@ -61,11 +71,7 @@
                                         </a>
                                         <a class="action tooltips" data-placement="top"
                                            href="{% url 'candidate_delete' item.pk  %}"
-                                           title="Eliminar"><i class="fa fa-recycle"></i>
-                                        </a>
-                                        <a class="action tooltips" data-placement="top"
-                                           href="{% url 'home_list'  %}"
-                                           title="Detalles"><i class="fa fa-file-text-o"></i>
+                                           title="Eliminar"><i class="fa fa-trash"></i>
                                         </a>
                                     </td>
                             </tr>
@@ -83,3 +89,6 @@
     <!-- /.content -->
   </div>
 {% endblock %}
+
+
+
